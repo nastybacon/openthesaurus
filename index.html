@@ -9,21 +9,46 @@
 
     <script>
         async function getSynonyms() { // soll Synonyme abrufen
+            let query = document.getElementById('searchQuery').value; // Variable für die Abfrage 
             // async -> asynchrone Funktion | wartet vor dem ausführen des nächsten Befehls
-            let url = 'https://www.openthesaurus.de/synonyme/​search?q=test&format=application/json';
+            let url = `https://www.openthesaurus.de/synonyme/search?q=${query}&format=application/json`;
             // URL von openthesaurus.de in eine Variable speichern
             let response = await fetch(url);
             // fetch -> runterladen, also die URL runterladen 
             // await -> "auf den Server warten" - damit die nächsten Befehle nach dem vollständigen Laden abgerufen werden 
             let responseAsJson = await response.json(); // .json() zeigt es als JSON an
-            console.log('Response is', responseAsJson);  // die Variable asl JSON zeigen
+            // console.log('Response is', responseAsJson);  // die Variable asl JSON zeigen
+            let synsets = responseAsJson['synsets']; // auf das Feld "synsets" zugreifen
+            renderSynsets(synsets); // nächste Funktion aufrufen
         }
+
+        function renderSynsets(synsets) { // eine extra Funktion, um auf die Synsets zuzugreifen
+            let container = document.getElementById('container'); // Variable definieren 
+            container.innerHTML = `<div>Es wurden <b>${synsets.length}</b> Synonym-Sets geladen.</div>`
+            // anzegen, wie viele Synonym-Sets geladen wurden
+            for (let i = 0; i < synsets.length; i++) { // For-Schleife um alle Elemente anzuzeigen
+                const synset = synsets[i]; // ein Synset aus dem Array nehmen
+                let terms = synset['terms']; // wieder ein ARRAY | TERM aus SYNSETS ziehen
+                container.innerHTML += `<h2>Synonym-Set mit ID ${synset['id']}</h2>`; // in den Container weiteres hinzufügen
+               
+                for (let j = 0; j < terms.length; j++) {
+                    const term = terms[j]; // ein Term aus dem Array nehmen
+                    container.innerHTML += `<div>${term['term']}</div>`; 
+                }
+            
+            }
+        }
+
     </script>
 </head>
 
 <body>
-
+    <input type="text" id="searchQuery">
     <button onclick="getSynonyms()">Get Synonyms</button> <!-- Button für Synonyme -->
+
+    <div id="container"> <!-- eine DIV zum anzeigen der Synsets -->
+
+    </div>
 
 </body>
 
