@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,14 +8,23 @@
     <title>Document</title>
 
     <script>
-        function getSynonyms() { // soll Synonyme abrufen
-
+        async function getSynonyms() { // soll Synonyme abrufen
+            // async -> asynchrone Funktion | wartet vor dem ausführen des nächsten Befehls
+            let url = 'https://www.openthesaurus.de/synonyme/​search?q=test&format=application/json';
+            // URL von openthesaurus.de in eine Variable speichern
+            let response = await fetch(url);
+            // fetch -> runterladen, also die URL runterladen 
+            // await -> "auf den Server warten" - damit die nächsten Befehle nach dem vollständigen Laden abgerufen werden 
+            let responseAsJson = await response.json(); // .json() zeigt es als JSON an
+            console.log('Response is', responseAsJson);  // die Variable asl JSON zeigen
         }
     </script>
 </head>
+
 <body>
-    
-    <button>Get Synonyms</button> <!-- Button für Synonyme -->
+
+    <button onclick="getSynonyms()">Get Synonyms</button> <!-- Button für Synonyme -->
 
 </body>
+
 </html>
